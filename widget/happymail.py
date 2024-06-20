@@ -1333,6 +1333,7 @@ def check_new_mail(driver, wait, name):
      print("message_iconが見つかりません")
      return
   # 新着があった
+  # if True:
   if len(new_message):
      link = message_icon.find_elements(By.TAG_NAME, value="a")
      link[0].click()
@@ -1349,7 +1350,8 @@ def check_new_mail(driver, wait, name):
          if len(list_load):
           list_load[0].click()
          time.sleep(2)
-     #新着がある間はループ  
+     #新着がある間はループ
+    #  while True:  
      while len(new_mail):
         parent_element = new_mail[0].find_element(By.XPATH, value="..")
         next_element = parent_element.find_element(By.XPATH, value="following-sibling::*")
@@ -1360,16 +1362,20 @@ def check_new_mail(driver, wait, name):
         elapsed_time = now - arrival_datetime
         # print(f"メール到着からの経過時間{elapsed_time}")
         # 4分経過しているか
+        # if True:
         if elapsed_time >= timedelta(minutes=4):
           print("4分以上経過しています。")
+          # s = driver.find_elements(By.CLASS_NAME, value="ds_js_hide_arrow")
+          # s[0].click()
           new_mail[0].click()
           wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
           time.sleep(2)
           catch_warning_screen(driver)
 
           print(11111111)
-          send_message = driver.find_elements(By.CLASS_NAME, value="message__block__body__text message__block__body__text--female")   
-          print(len(send_message))       
+          send_message = driver.find_elements(By.CLASS_NAME, value="message__block__body__text--female")   
+          print(len(send_message))  
+         
           if len(send_message) == 0:
             #  1st
             text_area = driver.find_element(By.ID, value="text-message")
