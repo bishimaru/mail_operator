@@ -1361,7 +1361,7 @@ def check_new_mail(driver, wait, name):
         # print(f"メール到着からの経過時間{elapsed_time}")
         # 4分経過しているか
         if elapsed_time >= timedelta(minutes=4):
-          # print("4分以上経過しています。")
+          print("4分以上経過しています。")
           new_mail[0].click()
           wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
           time.sleep(2)
