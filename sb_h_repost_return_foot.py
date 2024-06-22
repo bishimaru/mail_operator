@@ -71,7 +71,7 @@ def sb_h_repost_returnfoot(name, cnt):
   wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
   time.sleep(2)
   return_foot_cnt = 0
-  
+  repost_flug = ""
   try:
     repost_flug = happymail.re_post(name, happy_windowhandle, driver, post_title, post_contents, adult_flag, genre_flag)
   except Exception as e:
