@@ -52,9 +52,9 @@ def sb_h_all_do(return_foot_cnt):
       # print(elapsed_time)
     return return_func
   
-  # wait_cnt = 7200 / len(chara_order)
+  wait_cnt = 7200 / len(chara_order)
   # DEBUG
-  wait_cnt = 10
+  # wait_cnt = 10
 
   start_one_rap_time = time.time() 
   return_cnt_list = []

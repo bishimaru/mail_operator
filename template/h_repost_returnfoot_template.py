@@ -25,13 +25,14 @@ def get_driver():
     options.add_argument("--window-size=456,912")
     options.add_experimental_option("detach", True)
     options.add_argument("--disable-cache")
-    service = Service(executable_path="./chromedriver")
-    driver = webdriver.Chrome(service=service, options=options)
+    service = Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(options=options, service=service)
+    
     wait = WebDriverWait(driver, 15)
     return driver, wait
 
 def sb_h_repost_returnfoot(name, cnt): 
-  dbpath = 'firstdb.db'
+  dbpath = setting.db
   conn = sqlite3.connect(dbpath)
   cur = conn.cursor()
   cur.execute('SELECT login_id, passward, post_title, post_contents, return_foot_message, mail_img, fst_message FROM happymail WHERE name = ?', (name,))
@@ -71,9 +72,8 @@ def sb_h_repost_returnfoot(name, cnt):
   wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
   time.sleep(2)
   return_foot_cnt = 0
-  
   try:
-    repost_flug = happymail.re_post(name, happy_windowhandle, driver, post_title, post_contents, adult_flag, genre_flag)
+    happymail.re_post(name, happy_windowhandle, driver, post_title, post_contents, adult_flag, genre_flag)
   except Exception as e:
     print(f"ハッピーメール掲示板エラー{name}")
     print(traceback.format_exc())
@@ -86,8 +86,7 @@ def sb_h_repost_returnfoot(name, cnt):
     print(traceback.format_exc())
     func.send_error(f"足跡返しエラー{name}", traceback.format_exc())
   driver.quit()
-  print([repost_flug, return_foot_cnt])
-  return [repost_flug, return_foot_cnt]
+  return return_foot_cnt
 
 
 if __name__ == '__main__':
