@@ -288,7 +288,7 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
       time.sleep(wait_time)
       if this_area:
         print(str(this_area) + "の再投稿に成功しました")
-        repost_flug_list.append(str(this_area) + "の再投稿に成功しました")
+        repost_flug_list.append(str(this_area) + "◯")
       # id=modalの要素が出たら失敗 class=remodal-wrapperが4つともdiplay:noneなら成功
       warning = driver.find_elements(By.CLASS_NAME, value="remodal-wrapper ")
       if len(warning):
@@ -369,7 +369,7 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
                 success = driver.find_elements(By.CLASS_NAME, value="ds_keijiban_finish")
                 if len(success):
                   print(str(area) + "の再投稿に成功しました")
-                  repost_flug_list.append(str(area) + "の再投稿に成功しました")
+                  repost_flug_list.append(str(area) + ":◯")
                   # マイページをクリック
                   nav_list = driver.find_element(By.ID, value='ds_nav')
                   mypage = nav_list.find_element(By.LINK_TEXT, "マイページ")
@@ -396,7 +396,7 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
                   time.sleep(wait_time)
                 else:
                   print(str(area) + "の再投稿に失敗しました")
-                  repost_flug_list.append(str(area) + "の再投稿に失敗しました")
+                  repost_flug_list.append(str(area) + "：×")
                   not_be_repost_areas.append(str(area))
                   driver.get("https://happymail.co.jp/sp/app/html/mbmenu.php")
                   # マイページをクリック

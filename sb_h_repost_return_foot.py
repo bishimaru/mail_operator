@@ -86,8 +86,8 @@ def sb_h_repost_returnfoot(name, cnt):
     print(traceback.format_exc())
     func.send_error(f"足跡返しエラー{name}", traceback.format_exc())
   driver.quit()
-  print([repost_flug, return_foot_cnt])
-  return [repost_flug, return_foot_cnt]
+  print(f"再投稿：{repost_flug}\n足跡返し {return_foot_cnt}件")
+  return f"再投稿：{repost_flug}\n足跡返し {return_foot_cnt}件\n"
 
 
 if __name__ == '__main__':

@@ -44,8 +44,10 @@ def sb_h_all_do(return_foot_cnt):
   for chara in chara_order:
     try:
       return_func = timer(wait_cnt, [lambda: pcmax_repost(chara), lambda: sb_h_repost_returnfoot(chara, return_foot_cnt)])
-      if return_func is not None:
-        return_cnt_list.append(f"{chara}:足跡返し {return_func}件")
+      if isinstance(return_func, str):
+        return_cnt_list.append(f"{chara}: {return_func}")
+      elif isinstance(return_func, list):
+        return_cnt_list.append(f"{chara}: {return_func}")
     except Exception as e:
       print(f"エラー{chara}")
       print(traceback.format_exc())
