@@ -38,6 +38,7 @@ def catch_warning_screen(driver):
    
 def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genre_flag):
   area_list = ["東京都", "千葉県", "埼玉県", "神奈川県", "栃木県", "静岡県"]
+  repost_flug_list = []
   wait = WebDriverWait(driver, 15)
   if happy_windowhandle:
     driver.switch_to.window(happy_windowhandle)
@@ -359,6 +360,7 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
                 success = driver.find_elements(By.CLASS_NAME, value="ds_keijiban_finish")
                 if len(success):
                   print(str(area) + "の再投稿に成功しました")
+                  repost_flug_list.append(str(area) + "の再投稿に成功しました")
                   # マイページをクリック
                   nav_list = driver.find_element(By.ID, value='ds_nav')
                   mypage = nav_list.find_element(By.LINK_TEXT, "マイページ")
@@ -385,6 +387,7 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
                   time.sleep(wait_time)
                 else:
                   print(str(area) + "の再投稿に失敗しました")
+                  repost_flug_list.append(str(area) + "の再投稿に失敗しました")
                   not_be_repost_areas.append(str(area))
                   driver.get("https://happymail.co.jp/sp/app/html/mbmenu.php")
                   # マイページをクリック
@@ -415,6 +418,7 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
       repost_cnt += 1
       if repost_cnt == 4:
          break
+  return repost_flug_list
 
 def return_matching(name, wait, wait_time, driver, user_name_list, duplication_user, fst_message, return_foot_img):
   return_matching_cnt = 0
