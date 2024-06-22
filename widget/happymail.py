@@ -232,12 +232,16 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
     for area_text in area_texts_list:
       for area in area_list:
         if area in area_text:
+          print(888)
+          print(area)
           if area not in list:
               list.append(area)
               area_cnt += 1
           else:
               print("重複があった")
               print(area_cnt)
+              if area_cnt >= 4:
+                 continue
               duplication_area = driver.find_elements(By.CLASS_NAME, value="ds_round_btn_red")[area_cnt]
               driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", duplication_area)
               time.sleep(2)
@@ -260,9 +264,11 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
       # area_text = driver.find_elements(By.CLASS_NAME, value="ds_write_bbs_status")
       area_text = parent_blue_round_button.text.replace(" ", "").replace("\n", "")
       skip_flug = False
+      this_area = ""
       for area in area_list:
         if area in area_text:
           print("今回のエリア")
+          this_area = area
           print(area)
           if area in not_be_repost_areas:
             print("リポストできなかったのでスキップ")
@@ -280,6 +286,9 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
       re_posting.click()
       wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
       time.sleep(wait_time)
+      if this_area:
+        print(str(this_area) + "の再投稿に成功しました")
+        repost_flug_list.append(str(this_area) + "の再投稿に成功しました")
       # id=modalの要素が出たら失敗 class=remodal-wrapperが4つともdiplay:noneなら成功
       warning = driver.find_elements(By.CLASS_NAME, value="remodal-wrapper ")
       if len(warning):
