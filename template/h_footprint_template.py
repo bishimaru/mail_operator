@@ -48,7 +48,7 @@ def happymail_footprints(driver, wait):
     print(f"<<<<<<<<<<<<<経過時間 {elapsed_time_formatted}>>>>>>>>>>>>>>>>>>")
 if __name__ == '__main__':
   options = Options()
-  options.add_argument('--headless')
+  # options.add_argument('--headless')
   options.add_argument("--incognito")
   options.add_argument("--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1")
   options.add_argument("--no-sandbox")
@@ -56,9 +56,8 @@ if __name__ == '__main__':
   # options.add_argument("--remote-debugging-port=9222")
   options.add_experimental_option("detach", True)
   options.add_argument("--disable-cache")
-  service = Service(executable_path="./chromedriver")
-
-  driver = webdriver.Chrome(service=service, options=options)
+  service = Service(executable_path=ChromeDriverManager().install())
+  driver = webdriver.Chrome(options=options, service=service)
   # driver = func.get_debug_chromedriver()
   wait = WebDriverWait(driver, 15)
 
