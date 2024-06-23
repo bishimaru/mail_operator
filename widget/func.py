@@ -22,6 +22,7 @@ from selenium.common.exceptions import TimeoutException
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.firefox.options import Options
+import setting
 
 
 def get_driver():
@@ -143,6 +144,25 @@ def send_mail(message):
   msg['Date'] = formatdate()
   smtpobj.send_message(msg)
   smtpobj.close()
+  time.sleep(2)
+  # <<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>
+  mailaddress = setting.address_from
+  password = setting.gmail_pass
+  text = message
+  subject = "ハッピーメールサイト回し件数"
+  address_from = setting.address_from
+  address_to = setting.address_to
+  smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
+  smtpobj.starttls()
+  smtpobj.login(mailaddress, password)
+  msg = MIMEText(text)
+  msg['Subject'] = subject
+  msg['From'] = address_from
+  msg['To'] = address_to
+  msg['Date'] = formatdate()
+  smtpobj.send_message(msg)
+  smtpobj.close()
+
 
 
 def h_p_return_footprint(name, h_w, p_w, driver, return_foot_message, cnt, h_return_foot_img, p_return_foot_img):

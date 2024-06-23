@@ -36,7 +36,10 @@ def sb_h_repost_returnfoot(name, cnt):
   cur = conn.cursor()
   cur.execute('SELECT login_id, passward, post_title, post_contents, return_foot_message, mail_img, fst_message FROM happymail WHERE name = ?', (name,))
   login_id = ""
+  print(888)
+  print(cur)
   for row in cur:
+      print(666)
       login_id = row[0]
       login_pass = row[1]
       post_title = row[2]
@@ -50,6 +53,7 @@ def sb_h_repost_returnfoot(name, cnt):
          return_foot_img = ""
       fst_message = row[6]
   if not login_id:
+    print(999)
     return
   adult_flag = True
   genre_flag = setting.genre_flag
