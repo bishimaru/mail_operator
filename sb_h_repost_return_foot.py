@@ -26,8 +26,8 @@ def get_driver():
     options.add_argument("--window-size=456,912")
     options.add_experimental_option("detach", True)
     options.add_argument("--disable-cache")
-    service = Service(executable_path="./chromedriver")
-    driver = webdriver.Chrome(service=service, options=options)
+    service = Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(options=options, service=service)
     wait = WebDriverWait(driver, 15)
     return driver, wait
 
@@ -41,6 +41,7 @@ def sb_h_repost_returnfoot(name, cnt):
   print(dbpath)
   for row in cur:
       print(666)
+      print(row[0])
       login_id = row[0]
       login_pass = row[1]
       post_title = row[2]
