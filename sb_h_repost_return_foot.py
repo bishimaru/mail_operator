@@ -15,6 +15,7 @@ import setting
 import traceback
 from datetime import timedelta
 import sqlite3
+import setting
 
 def get_driver():
     options = Options()
@@ -31,13 +32,13 @@ def get_driver():
     return driver, wait
 
 def sb_h_repost_returnfoot(name, cnt): 
-  dbpath = 'firstdb.db'
+  dbpath = setting.db
   conn = sqlite3.connect(dbpath)
   cur = conn.cursor()
   cur.execute('SELECT login_id, passward, post_title, post_contents, return_foot_message, mail_img, fst_message FROM happymail WHERE name = ?', (name,))
   login_id = ""
   print(888)
-  print(cur)
+  print(dbpath)
   for row in cur:
       print(666)
       login_id = row[0]
