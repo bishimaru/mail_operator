@@ -59,9 +59,8 @@ if __name__ == '__main__':
   # options.add_argument("--remote-debugging-port=9222")
   options.add_experimental_option("detach", True)
   options.add_argument("--disable-cache")
-  service = Service(executable_path="./chromedriver")
-
-  driver = webdriver.Chrome(service=service, options=options)
+  service = Service(executable_path=ChromeDriverManager().install())
+  driver = webdriver.Chrome(options=options, service=service)
   # driver = func.get_debug_chromedriver()
   wait = WebDriverWait(driver, 15)
 
