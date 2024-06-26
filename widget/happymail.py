@@ -1009,32 +1009,33 @@ def make_footprints(name, happymail_id, happymail_pass, driver, wait):
         type_flag = True
         time.sleep(2)
       # いいね
-      # ランダムな数値を生成し、実行確率と比較
-      like_flag = False
-      # 実行確率
-      execution_probability = probability
-      if random.random() < execution_probability:
-        others_icon = driver.find_elements(By.CLASS_NAME, value="icon-profile_other_on")
-        others_icon[0].click()
-        wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-        time.sleep(1)
-        like_icon = driver.find_elements(By.ID, value="btn-like")
-        like_icon_classes = like_icon[0].get_attribute("class")
-        if not "disabled" in like_icon_classes:
-          like_flag = True
-          # footer_menu-list-item-link
-          like = like_icon[0].find_elements(By.CLASS_NAME, value="footer_menu-list-item-link")
-          like[0].click()
-          wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-          time.sleep(2)
-          like_cancel = driver.find_elements(By.CLASS_NAME, value="modal-cancel")
-          while not len(like_cancel):
-             time.sleep(1)
-             like_cancel = driver.find_elements(By.CLASS_NAME, value="modal-cancel")
-          like_cancel[0].click()
-          wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-          time.sleep(2)
-      print(f'{name}:足跡付け{i+1}件, いいね:{like_flag}、タイプ{type_flag}  {user_name}')
+      # # ランダムな数値を生成し、実行確率と比較
+      # like_flag = False
+      # # 実行確率
+      # execution_probability = probability
+      # if random.random() < execution_probability:
+      #   others_icon = driver.find_elements(By.CLASS_NAME, value="icon-profile_other_on")
+      #   others_icon[0].click()
+      #   wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+      #   time.sleep(1)
+      #   like_icon = driver.find_elements(By.ID, value="btn-like")
+      #   like_icon_classes = like_icon[0].get_attribute("class")
+      #   if not "disabled" in like_icon_classes:
+      #     like_flag = True
+      #     # footer_menu-list-item-link
+      #     like = like_icon[0].find_elements(By.CLASS_NAME, value="footer_menu-list-item-link")
+      #     like[0].click()
+      #     wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+      #     time.sleep(2)
+      #     like_cancel = driver.find_elements(By.CLASS_NAME, value="modal-cancel")
+      #     while not len(like_cancel):
+      #        time.sleep(1)
+      #        like_cancel = driver.find_elements(By.CLASS_NAME, value="modal-cancel")
+      #     like_cancel[0].click()
+      #     wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+      #     time.sleep(2)
+      # print(f'{name}:足跡付け{i+1}件, いいね:{like_flag}、タイプ{type_flag}  {user_name}')
+      print(f'{name}:足跡付け{i+1}件, タイプ{type_flag}  {user_name}')
       # 戻る
       back = driver.find_elements(By.CLASS_NAME, value="ds_prev_arrow")
       back[0].click()
