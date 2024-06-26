@@ -19,7 +19,7 @@ import setting
 
 def get_driver():
     options = Options()
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument("--incognito")
     options.add_argument("--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1")
     options.add_argument("--no-sandbox")
@@ -78,19 +78,19 @@ def sb_h_repost_returnfoot(name, cnt):
   time.sleep(2)
   return_foot_cnt = 0
   repost_flug = ""
-  # try:
-  #   repost_flug = happymail.re_post(name, happy_windowhandle, driver, post_title, post_contents, adult_flag, genre_flag)
-  # except Exception as e:
-  #   print(f"ハッピーメール掲示板エラー{name}")
-  #   print(traceback.format_exc())
-  #   func.send_error(f"ハッピーメール掲示板エラー{name}", traceback.format_exc())
-  # time.sleep(2)
   try:
-    return_foot_cnt = happymail.return_footpoint(name, happy_windowhandle, driver, return_foot_message, cnt, return_foot_img, fst_message)
+    repost_flug = happymail.re_post(name, happy_windowhandle, driver, post_title, post_contents, adult_flag, genre_flag)
   except Exception as e:
-    print(f"足跡返しエラー{name}")
+    print(f"ハッピーメール掲示板エラー{name}")
     print(traceback.format_exc())
-    func.send_error(f"足跡返しエラー{name}", traceback.format_exc())
+    func.send_error(f"ハッピーメール掲示板エラー{name}", traceback.format_exc())
+  # time.sleep(2)
+  # try:
+  #   return_foot_cnt = happymail.return_footpoint(name, happy_windowhandle, driver, return_foot_message, cnt, return_foot_img, fst_message)
+  # except Exception as e:
+  #   print(f"足跡返しエラー{name}")
+  #   print(traceback.format_exc())
+  #   func.send_error(f"足跡返しエラー{name}", traceback.format_exc())
   driver.quit()
   print(f"再投稿：{repost_flug}\n足跡返し {return_foot_cnt}件")
   return f"再投稿：{repost_flug}\n足跡返し {return_foot_cnt}件\n"
