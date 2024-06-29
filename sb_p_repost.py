@@ -24,11 +24,10 @@ def pcmax_repost(name):
   options.add_argument("--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1")
   options.add_argument("--no-sandbox")
   options.add_argument("--window-size=456,912")
-  # options.add_argument("--remote-debugging-port=9222")
   options.add_experimental_option("detach", True)
   options.add_argument("--disable-cache")
-  service = Service(executable_path="./chromedriver")
-  driver = webdriver.Chrome(service=service, options=options)
+  service = Service(executable_path=ChromeDriverManager().install())
+  driver = webdriver.Chrome(options=options, service=service)
   wait = WebDriverWait(driver, 15)
   genre_flag = setting.genre_flag
   pcmax_windowhandle = ""
