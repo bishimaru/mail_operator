@@ -945,7 +945,7 @@ def make_footprints(name, happymail_id, happymail_pass, driver, wait):
    driver.delete_all_cookies()
    driver.get("https://happymail.jp/login/")
    wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-   wait_time = random.uniform(2, 5)
+   wait_time = random.uniform(10, 30)
    time.sleep(wait_time)
    id_form = driver.find_element(By.ID, value="TelNo")
    id_form.send_keys(happymail_id)
@@ -999,9 +999,8 @@ def make_footprints(name, happymail_id, happymail_pass, driver, wait):
       # ランダムな数値を生成し、実行確率と比較
       type_flag = False
       # 実行確率
-      probability = 0.90
-      if name == "つむぎ":
-         parsent = 0.01
+      probability = 0.01
+      
       execution_probability = probability
       if random.random() < execution_probability:
         type_button = driver.find_element(By.ID, value="btn-type")
