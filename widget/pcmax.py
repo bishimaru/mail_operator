@@ -1438,7 +1438,8 @@ def check_new_mail(driver, wait, name):
   time.sleep(2)
   # //*[@id="contents"]/div[2]/div[2]/ul/li[5]/a
   # 足あとをクリック
-  footpoint = driver.find_element(By.XPATH, value="//*[@id='contents']/div[2]/div[2]/ul/li[5]/a")
+  footpoint = driver.find_element(By.CLASS_NAME, value="visit1")
+  # footpoint = driver.find_element(By.XPATH, value="//*[@id='contents']/div[2]/div[2]/ul/li[5]/a")
   footpoint.click()
   wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
   time.sleep(2)
