@@ -17,6 +17,7 @@ import re
 from datetime import datetime, timedelta
 import difflib
 from selenium.common.exceptions import NoSuchElementException
+import setting
 
 # 警告画面
 def catch_warning_screen(driver):
@@ -232,8 +233,8 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
     for area_text in area_texts_list:
       for area in area_list:
         if area in area_text:
-          print(888)
-          print(area)
+          # print(888)
+          # print(area)
           if area not in list:
               list.append(area)
               area_cnt += 1
@@ -267,7 +268,7 @@ def re_post(name, happy_windowhandle, driver, title, post_text, adult_flag, genr
       this_area = ""
       for area in area_list:
         if area in area_text:
-          print("今回のエリア")
+          # print("今回のエリア")
           this_area = area
           print(area)
           if area in not_be_repost_areas:
@@ -945,8 +946,8 @@ def make_footprints(name, happymail_id, happymail_pass, driver, wait):
    driver.delete_all_cookies()
    driver.get("https://happymail.jp/login/")
    wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-   wait_time = random.uniform(10, 30)
-   time.sleep(wait_time)
+   wait_time = random.uniform(2, 5)
+   time.sleep(2)
    id_form = driver.find_element(By.ID, value="TelNo")
    id_form.send_keys(happymail_id)
    pass_form = driver.find_element(By.ID, value="TelPass")
@@ -970,7 +971,7 @@ def make_footprints(name, happymail_id, happymail_pass, driver, wait):
    select.select_by_visible_text("プロフ一覧")
    wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
    time.sleep(wait_time)
-   for i in range(15):
+   for i in range(10):
       user_list = driver.find_elements(By.CLASS_NAME, value="ds_user_post_link_item_r")
       no_history_user = False
       #  メールアイコン（送信履歴）があるかチェック
@@ -1039,7 +1040,7 @@ def make_footprints(name, happymail_id, happymail_pass, driver, wait):
       back = driver.find_elements(By.CLASS_NAME, value="ds_prev_arrow")
       back[0].click()
       wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-      time.sleep(2)
+      time.sleep(wait_time)
       # たまに変なページに遷移するのでurl確認
       current_url = driver.current_url
       # 特定の文字列で始まっているか確認
@@ -1047,7 +1048,7 @@ def make_footprints(name, happymail_id, happymail_pass, driver, wait):
           print("URLは指定した文字列で始まっていません。")
           driver.get("https://happymail.co.jp/sp/app/html/profile_list.php")
           wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-          time.sleep(2)
+          time.sleep(wait_time)
 
 
   #  no_history_user_list = []
@@ -1145,146 +1146,135 @@ def make_footprints(name, happymail_id, happymail_pass, driver, wait):
 #          break
 #    driver.refresh()
 
-def send_fst_message(name_list):
-  options = Options()
-  options.add_argument('--headless')
-  options.add_argument("--no-sandbox")
-  options.add_argument("--remote-debugging-port=9222")
-  options.add_experimental_option("detach", True)
-  service = Service(executable_path="./chromedriver")
-  driver = webdriver.Chrome(service=service, options=options)
-  wait = WebDriverWait(driver, 15)
-  wait_time = random.uniform(2, 3)
-
-  try:
-    for name in name_list:
-      limit_cnt = 2
-      if name == "えりか":
-        limit_cnt = 3
-      h_w = func.get_windowhandle("happymail", name)
-      # print(name)
-      dbpath = 'firstdb.db'
-      conn = sqlite3.connect(dbpath)
-      # SQLiteを操作するためのカーソルを作成
-      cur = conn.cursor()
-      # データ検索
-      cur.execute('SELECT * FROM happymail WHERE name = ?', (name,))
-      for row in cur:
-          fst_message = row[6]
-          fst_message_img = row[7]
-      driver.switch_to.window(h_w)
-      # TOPに戻る
-      driver.get("https://happymail.co.jp/sp/app/html/mbmenu.php")
+def send_fst_message(happy_user_list, driver, wait):
+  
+  for user_info in happy_user_list:
+    name,login_id, passward, fst_message, mail_img = user_info
+    limit_cnt = 1
+    if name == "きりこ":
+      limit_cnt = 0
+    driver.delete_all_cookies()
+    driver.get("https://happymail.jp/login/")
+    wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    wait_time = random.uniform(3, 6)
+    time.sleep(wait_time)
+    id_form = driver.find_element(By.ID, value="TelNo")
+    id_form.send_keys(login_id)
+    pass_form = driver.find_element(By.ID, value="TelPass")
+    pass_form.send_keys(passward)
+    time.sleep(wait_time)
+    send_form = driver.find_element(By.ID, value="login_btn")
+    send_form.click()
+    wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    time.sleep(2)
+    #リモーダル画面が開いていれば閉じる
+    catch_warning_screen(driver)
+    # # プロフ検索をクリック
+    nav_list = driver.find_element(By.ID, value='ds_nav')
+    seach_profile = nav_list.find_element(By.LINK_TEXT, "プロフ検索")
+    seach_profile.click()
+    wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    time.sleep(wait_time)
+    send_cnt = 0
+    user_colum = 0
+    # 並びの表示を設定
+    sort_order = driver.find_elements(By.ID, value="kind_select")
+    select = Select(sort_order[0])
+    select.select_by_visible_text("プロフ一覧")
+    wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    time.sleep(wait_time)
+    
+    while send_cnt < limit_cnt:
+      # ユーザーをクリック
+      users = driver.find_elements(By.CLASS_NAME, value="ds_thum_contain")
+      # print('取得したユーザー数')
+      # print(len(users))
+      styles = users[user_colum].get_attribute('style')
+      e = driver.find_elements(By.CLASS_NAME, value="ds_mb2p")
+      age_text = e[user_colum].find_elements(By.CLASS_NAME, value="ds_post_body_age_small")
+      while not "20" in age_text[0].text:
+        user_colum += 1
+        e = driver.find_elements(By.CLASS_NAME, value="ds_mb2p")
+        age_text = e[user_colum].find_elements(By.CLASS_NAME, value="ds_post_body_age_small")
+        if user_colum == len(users):
+          break
+          
+      # 画像なしのユーザーを探す
+      # while "noimage" not in styles:
+      #   user_colum += 1
+      #   print(user_colum)
+      #   styles = users[user_colum].get_attribute('style')
+      
+      driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", users[user_colum])
+      users[user_colum].click()
       wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
       time.sleep(wait_time)
-      # # プロフ検索をクリック
-      nav_list = driver.find_element(By.ID, value='ds_nav')
-      seach_profile = nav_list.find_element(By.LINK_TEXT, "プロフ検索")
-      seach_profile.click()
+      send_status = True
+      m = driver.find_elements(By.XPATH, value="//*[@id='ds_main']/div/p")
+      if len(m):
+        print(m[0].text)
+        if m[0].text == "プロフィール情報の取得に失敗しました":
+            send_status = False
+            user_colum += 1
+      # 自己紹介文に業者、通報が含まれているかチェック
+      if len(driver.find_elements(By.CLASS_NAME, value="translate_body")):
+        contains_violations = driver.find_element(By.CLASS_NAME, value="translate_body")
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", contains_violations)
+        self_introduction_text = contains_violations.text.replace(" ", "").replace("\n", "")
+        if '通報' in self_introduction_text or '業者' in self_introduction_text:
+            print('自己紹介文に危険なワードが含まれていました')
+            send_status = False
+            user_colum += 1
+      # メッセージ履歴があるかチェック
+      mail_field = driver.find_element(By.ID, value="ds_nav")
+      mail_history = mail_field.find_element(By.ID, value="mail-history")
+      display_value = mail_history.value_of_css_property("display")
+      if display_value != "none":
+          print('メール履歴があります')
+          send_status = False
+          user_colum += 1
+      # メール送信
+      if send_status:
+        do_mail_icon = driver.find_elements(By.CLASS_NAME, value="ds_profile_target_btn")
+        do_mail_icon[0].click()
+        # 初めましてメッセージを入力
+        text_area = driver.find_element(By.ID, value="text-message")
+        text_area.send_keys(fst_message)
+        # 送信
+        send_mail = driver.find_element(By.ID, value="submitButton")
+        send_mail.click()
+        wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+        time.sleep(wait_time)
+        # 画像があれば送信
+        # mail_img = setting.debug_img
+        if mail_img:
+          img_conform = driver.find_element(By.ID, value="media-confirm")
+          plus_icon = driver.find_element(By.CLASS_NAME, value="icon-message_plus")
+          plus_icon.click()
+          time.sleep(1)
+          upload_file = driver.find_element(By.ID, "upload_file")
+          upload_file.send_keys(mail_img)
+          time.sleep(2)
+          submit = driver.find_element(By.ID, value="submit_button")
+          driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", submit)
+          driver.execute_script("arguments[0].click();", submit)
+          while img_conform.is_displayed():
+              time.sleep(2)
+        send_cnt += 1
+        user_colum += 1
+        print(f"fst_message {name}~{send_cnt}~")
+      driver.get("https://happymail.co.jp/sp/app/html/profile_list.php")
       wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
       time.sleep(wait_time)
-      send_cnt = 0
-      user_colum = 0
       # リモーダル画面が出たら閉じる
       remodal = driver.find_elements(By.CLASS_NAME, value="remodal-close")
       if len(remodal):
         print('リモーダル画面')
-        # remodal[0].click()
-        # time.sleep(wait_time)
-        driver.refresh()
-        wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+        remodal[0].click()
         time.sleep(wait_time)
-      # 並びの表示を設定
-      sort_order = driver.find_elements(By.ID, value="kind_select")
-      select = Select(sort_order[0])
-      select.select_by_visible_text("プロフ一覧")
-      wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-      time.sleep(wait_time)
-      
-      while send_cnt < limit_cnt:
-        # ユーザーをクリック
-        users = driver.find_elements(By.CLASS_NAME, value="ds_thum_contain")
-        print('取得したユーザー数')
-        print(len(users))
-        styles = users[user_colum].get_attribute('style')
-        # 画像なしのユーザーを探す
-        while "noimage" not in styles:
-          user_colum += 1
-          print(user_colum)
-          styles = users[user_colum].get_attribute('style')
-          if user_colum == len(users):
-             break
-        driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", users[user_colum])
-        users[user_colum].click()
-        wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-        time.sleep(wait_time)
-        send_status = True
-        m = driver.find_elements(By.XPATH, value="//*[@id='ds_main']/div/p")
-        if len(m):
-          print(m[0].text)
-          if m[0].text == "プロフィール情報の取得に失敗しました":
-              send_status = False
-              user_colum += 1
-        # 自己紹介文に業者、通報が含まれているかチェック
-        if len(driver.find_elements(By.CLASS_NAME, value="translate_body")):
-          contains_violations = driver.find_element(By.CLASS_NAME, value="translate_body")
-          driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", contains_violations)
-          self_introduction_text = contains_violations.text.replace(" ", "").replace("\n", "")
-          if '通報' in self_introduction_text or '業者' in self_introduction_text:
-              print('自己紹介文に危険なワードが含まれていました')
-              send_status = False
-              user_colum += 1
-        # メッセージ履歴があるかチェック
-        mail_field = driver.find_element(By.ID, value="ds_nav")
-        mail_history = mail_field.find_element(By.ID, value="mail-history")
-        display_value = mail_history.value_of_css_property("display")
-        if display_value != "none":
-            print('メール履歴があります')
-            send_status = False
-            user_colum += 1
-        # メール送信
-        if send_status:
-          do_mail_icon = driver.find_elements(By.CLASS_NAME, value="ds_profile_target_btn")
-          do_mail_icon[0].click()
-          # 初めましてメッセージを入力
-          text_area = driver.find_element(By.ID, value="text-message")
-          text_area.send_keys(fst_message)
-          # 送信
-          send_mail = driver.find_element(By.ID, value="submitButton")
-          send_mail.click()
-          wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-          time.sleep(wait_time)
-          # 画像があれば送信
-          if fst_message_img:
-            img_conform = driver.find_element(By.ID, value="media-confirm")
-            plus_icon = driver.find_element(By.CLASS_NAME, value="icon-message_plus")
-            plus_icon.click()
-            time.sleep(1)
-            upload_file = driver.find_element(By.ID, "upload_file")
-            upload_file.send_keys(fst_message_img)
-            time.sleep(2)
-            submit = driver.find_element(By.ID, value="submit_button")
-            driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", submit)
-            driver.execute_script("arguments[0].click();", submit)
-            while img_conform.is_displayed():
-                time.sleep(2)
-          send_cnt += 1
-          user_colum += 1
-          print(f"fst_message ~{send_cnt}~")
-        driver.get("https://happymail.co.jp/sp/app/html/profile_list.php")
-        wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
-        time.sleep(wait_time)
-        # リモーダル画面が出たら閉じる
-        remodal = driver.find_elements(By.CLASS_NAME, value="remodal-close")
-        if len(remodal):
-          print('リモーダル画面')
-          remodal[0].click()
-          time.sleep(wait_time)
-    print("fstmail end")
-    driver.quit()  
-  except Exception as e:  
-    print(traceback.format_exc())
-    driver.quit()  
+    
+  print("fstmail end")
+  
 
 def check_new_mail(driver, wait, name):
   return_list = []
@@ -1537,8 +1527,7 @@ def re_registration(name, driver):
   cur.execute('SELECT * FROM happymail WHERE name = ?', (name,))
   login_id = ""
   for row in cur:
-      print(777)
-      print(row)
+     
       login_id = row[2]
       login_pass = row[3]
      
