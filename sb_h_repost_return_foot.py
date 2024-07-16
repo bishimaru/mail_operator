@@ -19,7 +19,7 @@ import setting
 
 def get_driver():
     options = Options()
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument("--incognito")
     options.add_argument("--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Mobile/15E148 Safari/604.1")
     options.add_argument("--no-sandbox")
@@ -37,8 +37,6 @@ def sb_h_repost_returnfoot(name, cnt):
   cur = conn.cursor()
   cur.execute('SELECT login_id, passward, post_title, post_contents, return_foot_message, mail_img, fst_message FROM happymail WHERE name = ?', (name,))
   login_id = ""
-  print(888)
-  print(dbpath)
   for row in cur:
       print(666)
       print(row[0])
