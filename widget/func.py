@@ -89,6 +89,7 @@ def send_conditional(user_name, user_address, mailaddress, password, text, site)
   address_from = mailaddress
   address_to = user_address
   smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
+  smtpobj.set_debuglevel(1) 
   smtpobj.starttls()
   smtpobj.login(mailaddress, password)
   msg = MIMEText(text)
@@ -110,6 +111,7 @@ def send_error(chara, error_message):
   # address_to = "ryapya694@ruru.be"
   address_to = "gifopeho@kmail.li"
   smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
+  smtpobj.set_debuglevel(1) 
   smtpobj.starttls()
   smtpobj.login(mailaddress, password)
   msg = MIMEText(text)
@@ -134,6 +136,7 @@ def send_mail(message):
   address_from = setting.address_from
   address_to = setting.address_to
   smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
+  smtpobj.set_debuglevel(1) 
   smtpobj.starttls()
   smtpobj.login(mailaddress, password)
   msg = MIMEText(text)
