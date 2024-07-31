@@ -31,9 +31,8 @@ def send_fst_mail(name, login_id, login_pass, fst_message, fst_message_img, seco
   options.add_argument("--window-size=456,912")
   options.add_experimental_option("detach", True)
   options.add_argument("--disable-cache")
-  service = Service(executable_path="./chromedriver")
-  driver = webdriver.Chrome(service=service, options=options)
-  # driver = func.get_firefox_driver()
+  service = Service(executable_path=ChromeDriverManager().install())
+  driver = webdriver.Chrome(options=options, service=service)
   wait = WebDriverWait(driver, 15)
   try:
     driver.delete_all_cookies()
