@@ -29,7 +29,7 @@ def happymail_footprints(driver, wait):
   #    "くみ","さな","すい", "つむぎ",
   #                    ]
   foot_order_list = [
-     "つむぎ","ゆっこ", "ハル", "はづき", "くみ"
+     "くみ","つむぎ","ハル", "はづき", 
    ]
 
   for row in cur:

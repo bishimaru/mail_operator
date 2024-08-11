@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.service import Service
+
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import random
@@ -58,9 +59,10 @@ def get_driver(debug):
     options.add_argument("--window-size=456,912")
     options.add_experimental_option("detach", True)
     options.add_argument("--disable-cache")
-    service = Service(executable_path="./chromedriver")
+    # service = Service(ChromeDriverManager().install())
+    service = Service(executable_path=ChromeDriverManager().install())
+
     driver = webdriver.Chrome(service=service, options=options)
-    # driver = func.get_debug_chromedriver()
     wait = WebDriverWait(driver, 15)
     return driver, wait
 

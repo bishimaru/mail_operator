@@ -139,7 +139,7 @@ def check_new_mail(driver, wait, name):
   dbpath = 'firstdb.db'
   conn = sqlite3.connect(dbpath)
   cur = conn.cursor()
-  cur.execute('SELECT login_id, login_passward, fst_message, return_foot_message, second_message, mail_img FROM jmail WHERE name = ?', (name,))
+  cur.execute('SELECT login_id, login_passward, fst_message, return_foot_message, second_message, mail_img, submitted_users FROM jmail WHERE name = ?', (name,))
   login_id = None
   for row in cur:
     login_id = row[0]
@@ -148,6 +148,7 @@ def check_new_mail(driver, wait, name):
     return_foot_message = row[3]
     second_message = row[4]
     mail_img = row[5]
+    submitted_users = row[6]
   if login_id == None or login_id == "":
     print(f"{name}のjmailキャラ情報を取得できませんでした")
     return 1, 0
@@ -161,7 +162,9 @@ def check_new_mail(driver, wait, name):
   driver.get(link.get_attribute("href"))
   wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
   time.sleep(2)
-  interacting_user_list = []
+  interacting_user_list = submitted_users.split(" ")
+  print(77777)
+  print(interacting_user_list)
   interacting_users = driver.find_elements(By.CLASS_NAME, value="icon_sex_m")
   # 未読メールをチェック
   send_count = 0
@@ -178,12 +181,13 @@ def check_new_mail(driver, wait, name):
     if "　" in interacting_user_name:
       interacting_user_name = interacting_user_name.replace("　", "")
     # 未読、退会以外でNEWのアイコンも存在してそう
-    interacting_user_list.append(interacting_user_name)
+
+    
     # NEWアイコンがあるかチェック
     new_icon = interacting_users[interacting_user_cnt].find_elements(By.TAG_NAME, value="img")
     if "未読" in interacting_users[interacting_user_cnt].text or len(new_icon):
     # deug
-    # if "のの" in interacting_users[interacting_user_cnt].text:
+    # if "ムータン" in interacting_users[interacting_user_cnt].text:
       # 時間を取得　align_right
       parent_usr_info = interacting_users[interacting_user_cnt].find_element(By.XPATH, "./..")
       parent_usr_info = parent_usr_info.find_element(By.XPATH, "./..")
@@ -199,6 +203,17 @@ def check_new_mail(driver, wait, name):
       print(f"メール到着からの経過時間{elapsed_time}")
       if elapsed_time >= timedelta(minutes=4):
         print("4分以上経過しています。")
+        # ユーザー名を保存
+        if interacting_user_name not in interacting_user_list:
+          interacting_user_name = " " + interacting_user_name
+          cur.execute('''
+          INSERT INTO jmail (submitted_users) VALUES (?)
+          ''', (interacting_user_name,))
+          conn.commit()
+          # interacting_user_list.append(interacting_user_name)
+          print(66666666)
+          print(interacting_user_name)
+        
         send_message = ""
         # リンクを取得
         link_element = interacting_users[interacting_user_cnt].find_element(By.XPATH, "./..")
@@ -264,7 +279,6 @@ def check_new_mail(driver, wait, name):
           wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
           time.sleep(2)
 
-        
         # 相手からのメッセージが何通目か確認する
         if not sended_mail:
           send_by_me = driver.find_elements(By.CLASS_NAME, value="balloon_right")
@@ -340,6 +354,17 @@ def check_new_mail(driver, wait, name):
         if "未読" in interacting_users[interacting_user_cnt].text or len(new_icon):
         # deug
         # if "のの" in interacting_users[interacting_user_cnt].text:
+          # ユーザー名を保存
+          if interacting_user_name not in interacting_user_list:
+            interacting_user_name = " " + interacting_user_name
+            cur.execute('''
+            INSERT INTO jmail (submitted_users) VALUES (?)
+            ''', (interacting_user_name,))
+            conn.commit()
+            # interacting_user_list.append(interacting_user_name)
+            print(66666666)
+            print(interacting_user_name)
+            
           # 時間を取得　align_right
           parent_usr_info = interacting_users[interacting_user_cnt].find_element(By.XPATH, "./..")
           parent_usr_info = parent_usr_info.find_element(By.XPATH, "./..")
