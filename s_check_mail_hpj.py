@@ -92,110 +92,152 @@ def check_mail():
     }
   send_flug = True
   while True:
-    start_time = time.time() 
-    current_datetime = datetime.utcfromtimestamp(int(start_time))
-   
-    for order_info in order_list:
-        new_mail_lists = []
-        debug = False
-        #  # ハッピーメール
-        try:
-            driver, wait = get_driver(debug)
-            happymail_new = happymail.check_new_mail(driver, wait, order_info[0])
-            if happymail_new:
-                new_mail_lists.append(happymail_new)
-            driver.quit()
-        except Exception as e:
-            print(f"<<<<<<<<<<メールチェックエラー：ハッピーメール{order_info[0]}>>>>>>>>>>>")
-            print(traceback.format_exc())
-            func.send_error(f"メールチェックエラー：ハッピーメール{order_info[0]}", traceback.format_exc())
+    try:
+        start_time = time.time() 
+        current_datetime = datetime.utcfromtimestamp(int(start_time))
+    
+        for order_info in order_list:
+            new_mail_lists = []
+            debug = False
+            #  # ハッピーメール
+            try:
+                driver, wait = get_driver(debug)
+                happymail_new = happymail.check_new_mail(driver, wait, order_info[0])
+                if happymail_new:
+                    new_mail_lists.append(happymail_new)
+                driver.quit()
+            except Exception as e:
+                print(f"<<<<<<<<<<メールチェックエラー：ハッピーメール{order_info[0]}>>>>>>>>>>>")
+                print(traceback.format_exc())
+                func.send_error(f"メールチェックエラー：ハッピーメール{order_info[0]}", traceback.format_exc())
 
-            driver.quit()
-        # pcmax
-        try:
-            driver, wait = get_driver(debug)
-            pcmax_new, return_foot_cnt = pcmax.check_new_mail(driver, wait, order_info[0])
+                driver.quit()
+            # pcmax
+            try:
+                driver, wait = get_driver(debug)
+                pcmax_new, return_foot_cnt = pcmax.check_new_mail(driver, wait, order_info[0])
+                
+                if pcmax_new != 1:
+                    new_mail_lists.append(pcmax_new)
             
-            if pcmax_new != 1:
-                new_mail_lists.append(pcmax_new)
-           
-            if return_foot_cnt:     
-                for r_f_user in pcmax_return_foot_count_dic:
-                    if order_info[0] == r_f_user:
-                        # print(777)
-                        # print(return_foot_count_dic[r_f_user])
-                        pcmax_return_foot_count_dic[r_f_user] = pcmax_return_foot_count_dic[r_f_user] + return_foot_cnt
-                        # print(return_foot_count_dic[r_f_user])
-            driver.quit()
-        except Exception as e:
-            print(f"<<<<<<<<<<メールチェックエラー：pcmax{order_info[0]}>>>>>>>>>>>")
-            print(traceback.format_exc())
-            func.send_error(f"メールチェックエラー：pcmax{order_info[0]}", traceback.format_exc())
+                if return_foot_cnt:     
+                    for r_f_user in pcmax_return_foot_count_dic:
+                        if order_info[0] == r_f_user:
+                            # print(777)
+                            # print(return_foot_count_dic[r_f_user])
+                            pcmax_return_foot_count_dic[r_f_user] = pcmax_return_foot_count_dic[r_f_user] + return_foot_cnt
+                            # print(return_foot_count_dic[r_f_user])
+                driver.quit()
+            except Exception as e:
+                print(f"<<<<<<<<<<メールチェックエラー：pcmax{order_info[0]}>>>>>>>>>>>")
+                print(traceback.format_exc())
+                func.send_error(f"メールチェックエラー：pcmax{order_info[0]}", traceback.format_exc())
 
-            driver.quit()
+                driver.quit()
 
-        # jmail
-        try:
-            driver, wait = get_driver(debug)
-            jmail_new, return_foot_cnt = jmail.check_new_mail(driver, wait, order_info[0])
-            # print(1111111111)
-            # print(return_foot_cnt)
-            if jmail_new == 2:
-                new_mail_lists.append(f"jmail:{order_info[0]} ログインできませんでした")
-            elif jmail_new != 1:
-                new_mail_lists.append(jmail_new)
-            if return_foot_cnt:
-                for r_f_user in jmail_return_foot_count_dic:
-                    
-                    if order_info[0] == r_f_user:
-                       
-                        jmail_return_foot_count_dic[r_f_user] = jmail_return_foot_count_dic[r_f_user] + return_foot_cnt
-            driver.quit()
-        except Exception as e:
-            print(f"<<<<<<<<<<メールチェックエラー：jmail{order_info[0]}>>>>>>>>>>>")
-            print(traceback.format_exc())
-            func.send_error(f"メールチェックエラー：jmail{order_info[0]}", traceback.format_exc())
+            # jmail
+            try:
+                driver, wait = get_driver(debug)
+                jmail_new, return_foot_cnt = jmail.check_new_mail(driver, wait, order_info[0])
+                # print(1111111111)
+                # print(return_foot_cnt)
+                if jmail_new == 2:
+                    new_mail_lists.append(f"jmail:{order_info[0]} ログインできませんでした")
+                elif jmail_new != 1:
+                    new_mail_lists.append(jmail_new)
+                if return_foot_cnt:
+                    for r_f_user in jmail_return_foot_count_dic:
+                        
+                        if order_info[0] == r_f_user:
+                        
+                            jmail_return_foot_count_dic[r_f_user] = jmail_return_foot_count_dic[r_f_user] + return_foot_cnt
+                driver.quit()
+            except Exception as e:
+                print(f"<<<<<<<<<<メールチェックエラー：jmail{order_info[0]}>>>>>>>>>>>")
+                print(traceback.format_exc())
+                func.send_error(f"メールチェックエラー：jmail{order_info[0]}", traceback.format_exc())
 
-            driver.quit()
-        # gmail
-        # try:
-        #     time.sleep(2)
-        #     debug = True
-        #     driver, wait = get_driver(debug)
-        #     gmail_new = func.check_new_mail_gmail(driver, wait, order_info[0], order_info[1])
-        #     if gmail_new:
-        #         new_mail_lists.append(gmail_new)
-        #     # print(456)
-        #     # print(gmail_new)
-        #     driver.quit()
-        # except Exception as e:
-        #     print(f"<<<<<<<<<<メールチェックエラー：{order_info[1]}>>>>>>>>>>>")
-        #     print(traceback.format_exc())
-        #     driver.quit()
-        
-        # メール送信
-        if len(new_mail_lists) == 0:
-            print(f'{order_info[0]}新着チェック完了手動メールなし')
-            pass
-        else:
-            print(f'{order_info[0]}新着チェック完了手動メールあり')
-            print(new_mail_lists)
+                driver.quit()
+            # gmail
+            # try:
+            #     time.sleep(2)
+            #     debug = True
+            #     driver, wait = get_driver(debug)
+            #     gmail_new = func.check_new_mail_gmail(driver, wait, order_info[0], order_info[1])
+            #     if gmail_new:
+            #         new_mail_lists.append(gmail_new)
+            #     # print(456)
+            #     # print(gmail_new)
+            #     driver.quit()
+            # except Exception as e:
+            #     print(f"<<<<<<<<<<メールチェックエラー：{order_info[1]}>>>>>>>>>>>")
+            #     print(traceback.format_exc())
+            #     driver.quit()
+            
+            # メール送信
+            if len(new_mail_lists) == 0:
+                print(f'{order_info[0]}新着チェック完了手動メールなし')
+                pass
+            else:
+                print(f'{order_info[0]}新着チェック完了手動メールあり')
+                print(new_mail_lists)
+                mailaddress = 'kenta.bishi777@gmail.com'
+                password = 'rjdzkswuhgfvslvd'
+                text = ""
+                subject = "新着メッセージ"
+            
+                for new_mail_list in new_mail_lists:
+                    # print('<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>')
+                    # print(new_mail_list)
+                    for new_mail in new_mail_list:
+
+                        text = text + new_mail + ",\n"
+                address_from = 'kenta.bishi777@gmail.com'
+                # address_to = 'bidato@wanko.be'
+                address_to = "ryapya694@ruru.be"
+                # address_to = 'misuzu414510@gmail.com'
+
+                try:
+                    smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
+                    smtpobj.starttls()
+                    smtpobj.login(mailaddress, password)
+                    msg = MIMEText(text)
+                    msg['Subject'] = subject
+                    msg['From'] = address_from
+                    msg['To'] = address_to
+                    msg['Date'] = formatdate()
+                    smtpobj.send_message(msg)
+                except smtplib.SMTPDataError as e:
+                    print(f"SMTPDataError: {e}")
+                except Exception as e:
+                    print(f"An error occurred: {e}")
+                smtpobj.close()
+        elapsed_time = time.time() - start_time  
+        elapsed_timedelta = timedelta(seconds=elapsed_time)
+        elapsed_time_formatted = str(elapsed_timedelta)
+        print(f"<<<<<<<<<<<<<<<<<<<<足跡返し総数　　開始時間{current_datetime}, 経過時間{elapsed_time_formatted}>>>>>>>>>>>>>>>>>>>>")
+        print(pcmax_return_foot_count_dic)
+        print("<<<<<<<<<<<<<<<jmail>>>>>>>>>>>>>>>>>>>>>>>")
+        print(jmail_return_foot_count_dic)
+
+        # 現在時刻を取得
+        now = datetime.now()
+        # 現在時刻の時間と分を取得
+        current_hour = now.hour
+        current_minute = now.minute
+        # もし現在時刻が10:00から10:20の間だったら
+        print(f"{current_hour}  {current_minute}")
+        if current_hour == 10 and 0 <= current_minute <= 30:
+            print("現在時刻は10:00から10:20の間です。特定の動作を実行します。")
+            # ここに実行したい動作を追加
             mailaddress = 'kenta.bishi777@gmail.com'
             password = 'rjdzkswuhgfvslvd'
-            text = ""
-            subject = "新着メッセージ"
-        
-            for new_mail_list in new_mail_lists:
-                # print('<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>')
-                # print(new_mail_list)
-                for new_mail in new_mail_list:
-
-                    text = text + new_mail + ",\n"
+            text = str(jmail_return_foot_count_dic)  # 辞書を文字列に変換
+            subject = "jメール足跡返し件数"
             address_from = 'kenta.bishi777@gmail.com'
             # address_to = 'bidato@wanko.be'
             address_to = "ryapya694@ruru.be"
             # address_to = 'misuzu414510@gmail.com'
-
             try:
                 smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
                 smtpobj.starttls()
@@ -211,50 +253,14 @@ def check_mail():
             except Exception as e:
                 print(f"An error occurred: {e}")
             smtpobj.close()
-    elapsed_time = time.time() - start_time  
-    elapsed_timedelta = timedelta(seconds=elapsed_time)
-    elapsed_time_formatted = str(elapsed_timedelta)
-    print(f"<<<<<<<<<<<<<<<<<<<<足跡返し総数　　開始時間{current_datetime}, 経過時間{elapsed_time_formatted}>>>>>>>>>>>>>>>>>>>>")
-    print(pcmax_return_foot_count_dic)
-    print("<<<<<<<<<<<<<<<jmail>>>>>>>>>>>>>>>>>>>>>>>")
-    print(jmail_return_foot_count_dic)
-
-    # 現在時刻を取得
-    now = datetime.now()
-    # 現在時刻の時間と分を取得
-    current_hour = now.hour
-    current_minute = now.minute
-    # もし現在時刻が10:00から10:20の間だったら
-    print(f"{current_hour}  {current_minute}")
-    if current_hour == 10 and 0 <= current_minute <= 30:
-        print("現在時刻は10:00から10:20の間です。特定の動作を実行します。")
-        # ここに実行したい動作を追加
-        mailaddress = 'kenta.bishi777@gmail.com'
-        password = 'rjdzkswuhgfvslvd'
-        text = str(jmail_return_foot_count_dic)  # 辞書を文字列に変換
-        subject = "jメール足跡返し件数"
-        address_from = 'kenta.bishi777@gmail.com'
-        # address_to = 'bidato@wanko.be'
-        address_to = "ryapya694@ruru.be"
-        # address_to = 'misuzu414510@gmail.com'
-        try:
-            smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
-            smtpobj.starttls()
-            smtpobj.login(mailaddress, password)
-            msg = MIMEText(text)
-            msg['Subject'] = subject
-            msg['From'] = address_from
-            msg['To'] = address_to
-            msg['Date'] = formatdate()
-            smtpobj.send_message(msg)
-        except smtplib.SMTPDataError as e:
-            print(f"SMTPDataError: {e}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
-        smtpobj.close()
-        send_flug = False
-    if current_hour == 11:
-        send_flug = True
+            send_flug = False
+        if current_hour == 11:
+            send_flug = True
+    except (smtplib.SMTPException, socket.gaierror) as e:
+        print(f"メール送信中にエラーが発生しました: {e}")
+        print("5分間待機して再試行します...")
+        time.sleep(300)  # 300秒（5分）間待機
+        check_mail()
 
 
 
