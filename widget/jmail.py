@@ -364,7 +364,6 @@ def check_new_mail(driver, wait, name):
             # interacting_user_list.append(interacting_user_name)
             print(66666666)
             print(interacting_user_name)
-            
           # 時間を取得　align_right
           parent_usr_info = interacting_users[interacting_user_cnt].find_element(By.XPATH, "./..")
           parent_usr_info = parent_usr_info.find_element(By.XPATH, "./..")
