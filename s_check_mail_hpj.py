@@ -19,6 +19,7 @@ from email.utils import formatdate
 import sqlite3
 from datetime import timedelta
 from datetime import datetime
+import socket
 
 
 order_list = [
@@ -199,6 +200,8 @@ def check_mail():
 
                 try:
                     smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
+                    # smtpobj.set_debuglevel(1) 
+                    smtpobj.set_debuglevel(0)  # デバッグログをオフにする
                     smtpobj.starttls()
                     smtpobj.login(mailaddress, password)
                     msg = MIMEText(text)
