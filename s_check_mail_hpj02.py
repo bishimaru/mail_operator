@@ -61,6 +61,23 @@ def get_driver(debug):
     wait = WebDriverWait(driver, 15)
     return driver, wait
 
+def wait_if_near_midnight():
+    current_time = datetime.datetime.now().time()
+    
+    # 現在時刻が23:50を越えているかをチェック
+    if current_time >= datetime.time(23, 55):
+        print("23:55を過ぎたので、0:05まで待機します。")
+        # 0:05までの残り時間を計算
+        target_time = datetime.datetime.combine(datetime.date.today(), datetime.time(0, 5))
+        if current_time.hour == 23:
+            target_time += datetime.timedelta(days=1)  # 翌日の0:05を設定
+        time_to_wait = (target_time - datetime.datetime.now()).total_seconds()
+        
+        # 残り時間を待機
+        time.sleep(time_to_wait)
+        print("待機終了、処理を再開します。")
+    return
+
 def check_mail():
   try:
     pcmax_return_foot_count_dic = {
@@ -103,18 +120,19 @@ def check_mail():
             new_mail_lists = []
             debug = False
             # ハッピーメール
-            # try:
-            #     driver, wait = get_driver(debug)
-            #     happymail_new = happymail.check_new_mail(driver, wait, order_info[0])
-            #     if happymail_new:
-            #         new_mail_lists.append(happymail_new)
-            #     driver.quit()
-            # except Exception as e:
-            #     print(f"<<<<<<<<<<メールチェックエラー：ハッピーメール{order_info[0]}>>>>>>>>>>>")
-            #     print(traceback.format_exc())
-            #     func.send_error(f"メールチェックエラー：ハッピーメール{order_info[0]}", traceback.format_exc())
+            try:
+                driver, wait = get_driver(debug)
+                happymail_new = happymail.check_new_mail(driver, wait, order_info[0])
+                if happymail_new:
+                    new_mail_lists.append(happymail_new)
+                driver.quit()
+            except Exception as e:
+                print(f"<<<<<<<<<<メールチェックエラー：ハッピーメール{order_info[0]}>>>>>>>>>>>")
+                print(traceback.format_exc())
+                func.send_error(f"メールチェックエラー：ハッピーメール{order_info[0]}", traceback.format_exc())
 
-            #     driver.quit()
+                driver.quit()
+            wait_if_near_midnight()
             # pcmax
             try:
                 driver, wait = get_driver(debug)
@@ -137,7 +155,7 @@ def check_mail():
                 func.send_error(f"メールチェックエラー：pcmax{order_info[0]}", traceback.format_exc())
 
                 driver.quit()
-
+            wait_if_near_midnight()
             # jmail
             try:
                 driver, wait = get_driver(debug)
