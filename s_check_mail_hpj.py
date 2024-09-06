@@ -4,7 +4,6 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import random
-import time
 from selenium.webdriver.common.by import By
 import os
 import sys
@@ -17,11 +16,9 @@ import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
 import sqlite3
-from datetime import timedelta
-from datetime import datetime
+import time 
+from datetime import datetime, timedelta, time as dt_time  
 import socket
-
-
 order_list = [
    ["アスカ", "asuka414510@gmail.com"],
 #    ["あやか", "ayaka414510@gmail.com"],
@@ -62,15 +59,15 @@ def get_driver(debug):
     return driver, wait
 
 def wait_if_near_midnight():
-    current_time = datetime.datetime.now().time()
+    current_time = datetime.now().time()
     
     # 現在時刻が23:50を越えているかをチェック
-    if current_time >= datetime.time(23, 55):
+    if current_time >= dt_time(23, 55):
         print("23:55を過ぎたので、0:05まで待機します。")
         # 0:05までの残り時間を計算
-        target_time = datetime.datetime.combine(datetime.date.today(), datetime.time(0, 5))
+        target_time = datetime.combine(datetime.date.today(), dt_time(0, 5))
         if current_time.hour == 23:
-            target_time += datetime.timedelta(days=1)  # 翌日の0:05を設定
+            target_time += timedelta(days=1)  # 翌日の0:05を設定
         time_to_wait = (target_time - datetime.datetime.now()).total_seconds()
         
         # 残り時間を待機
@@ -78,47 +75,48 @@ def wait_if_near_midnight():
         print("待機終了、処理を再開します。")
     return
 
-
 def check_mail():
-  pcmax_return_foot_count_dic = {
-        "アスカ": 0,
+  try:
+    pcmax_return_foot_count_dic = {
+            "アスカ": 0,
+            "いおり": 0,
+            "えりか": 0,
+            "きりこ": 0,
+            "くみ": 0,
+            "さな": 0,
+            "すい": 0,
+            "つむぎ": 0,
+            "なお": 0,
+            "ハル": 0,
+            "はづき": 0,
+            "めあり": 0,
+            "りこ": 0,
+            "りな": 0,
+            "ゆうな": 0,
+            "ゆっこ": 0,
+            "ゆかり": 0,   
+            "わかな": 0,   
+        }
+    jmail_return_foot_count_dic = {
         "いおり": 0,
-        "えりか": 0,
-        "きりこ": 0,
-        "くみ": 0,
-        "さな": 0,
-        "すい": 0,
-        "つむぎ": 0,
-        "なお": 0,
-        "ハル": 0,
-        "はづき": 0,
-        "めあり": 0,
-        "りこ": 0,
-        "りな": 0,
-        "ゆうな": 0,
-        "ゆっこ": 0,
-        "ゆかり": 0,   
-    }
-  jmail_return_foot_count_dic = {
-       "いおり": 0,
-        "つむぎ": 0,
-         "ハル": 0,
-         "きりこ": 0,
-         "ゆっこ": 0,
-         "りこ": 0,
-        "ゆうな": 0,
-       
-    }
-  send_flug = True
-  while True:
-    try:
+            "つむぎ": 0,
+            "ハル": 0,
+            "きりこ": 0,
+            "ゆっこ": 0,
+            "りこ": 0,
+            "りな": 0,
+            "ゆうな": 0,
+        
+        }
+    send_flug = True
+    while True:
         start_time = time.time() 
         current_datetime = datetime.utcfromtimestamp(int(start_time))
-        
+    
         for order_info in order_list:
             new_mail_lists = []
             debug = False
-            #  # ハッピーメール
+            # ハッピーメール
             try:
                 driver, wait = get_driver(debug)
                 happymail_new = happymail.check_new_mail(driver, wait, order_info[0])
@@ -159,24 +157,23 @@ def check_mail():
             try:
                 driver, wait = get_driver(debug)
                 jmail_new, return_foot_cnt = jmail.check_new_mail(driver, wait, order_info[0])
-                # print(1111111111)
-                # print(return_foot_cnt)
                 if jmail_new == 2:
                     new_mail_lists.append(f"jmail:{order_info[0]} ログインできませんでした")
                 elif jmail_new != 1:
                     new_mail_lists.append(jmail_new)
-                if return_foot_cnt:
+                if return_foot_cnt:     
                     for r_f_user in jmail_return_foot_count_dic:
-                        
                         if order_info[0] == r_f_user:
-                        
+                            # print(777)
+                            # print(jmail_return_foot_count_dic[r_f_user])
+                            # print(return_foot_cnt)
                             jmail_return_foot_count_dic[r_f_user] = jmail_return_foot_count_dic[r_f_user] + return_foot_cnt
+                            # print(jmail_return_foot_count_dic[r_f_user])
                 driver.quit()
             except Exception as e:
                 print(f"<<<<<<<<<<メールチェックエラー：jmail{order_info[0]}>>>>>>>>>>>")
                 print(traceback.format_exc())
                 func.send_error(f"メールチェックエラー：jmail{order_info[0]}", traceback.format_exc())
-
                 driver.quit()
             # gmail
             # try:
@@ -193,7 +190,7 @@ def check_mail():
             #     print(f"<<<<<<<<<<メールチェックエラー：{order_info[1]}>>>>>>>>>>>")
             #     print(traceback.format_exc())
             #     driver.quit()
-            wait_if_near_midnight()
+            
             # メール送信
             if len(new_mail_lists) == 0:
                 print(f'{order_info[0]}新着チェック完了手動メールなし')
@@ -219,8 +216,6 @@ def check_mail():
 
                 try:
                     smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
-                    # smtpobj.set_debuglevel(1) 
-                    smtpobj.set_debuglevel(0)  # デバッグログをオフにする
                     smtpobj.starttls()
                     smtpobj.login(mailaddress, password)
                     msg = MIMEText(text)
@@ -248,8 +243,7 @@ def check_mail():
         current_hour = now.hour
         current_minute = now.minute
         # もし現在時刻が10:00から10:20の間だったら
-        print(f"{current_hour}  {current_minute}")
-        if current_hour == 10 and 0 <= current_minute <= 30:
+        if current_hour == 10 and 0 <= current_minute <= 20 and send_flug:
             print("現在時刻は10:00から10:20の間です。特定の動作を実行します。")
             # ここに実行したい動作を追加
             mailaddress = 'kenta.bishi777@gmail.com'
@@ -278,11 +272,11 @@ def check_mail():
             send_flug = False
         if current_hour == 11:
             send_flug = True
-    except (smtplib.SMTPException, socket.gaierror) as e:
-        print(f"メール送信中にエラーが発生しました: {e}")
-        print("5分間待機して再試行します...")
-        time.sleep(300)  # 300秒（5分）間待機
-        check_mail()
+  except (smtplib.SMTPException, socket.gaierror) as e:
+    print(f"メール送信中にエラーが発生しました: {e}")
+    print("5分間待機して再試行します...")
+    time.sleep(300)  # 300秒（5分）間待機
+    check_mail()
 
 
 

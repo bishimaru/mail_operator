@@ -4,7 +4,6 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import random
-import time
 from selenium.webdriver.common.by import By
 import os
 import sys
@@ -17,10 +16,9 @@ import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
 import sqlite3
-from datetime import timedelta
-from datetime import datetime
+import time 
+from datetime import datetime, timedelta, time as dt_time  
 import socket
-
 order_list = [
   #  ["アスカ", "asuka414510@gmail.com"],
   #  ["あやか", "ayaka414510@gmail.com"],
@@ -62,15 +60,15 @@ def get_driver(debug):
     return driver, wait
 
 def wait_if_near_midnight():
-    current_time = datetime.datetime.now().time()
+    current_time = datetime.now().time()
     
     # 現在時刻が23:50を越えているかをチェック
-    if current_time >= datetime.time(23, 55):
+    if current_time >= dt_time(23, 55):
         print("23:55を過ぎたので、0:05まで待機します。")
         # 0:05までの残り時間を計算
-        target_time = datetime.datetime.combine(datetime.date.today(), datetime.time(0, 5))
+        target_time = datetime.combine(datetime.date.today(), dt_time(0, 5))
         if current_time.hour == 23:
-            target_time += datetime.timedelta(days=1)  # 翌日の0:05を設定
+            target_time += timedelta(days=1)  # 翌日の0:05を設定
         time_to_wait = (target_time - datetime.datetime.now()).total_seconds()
         
         # 残り時間を待機
