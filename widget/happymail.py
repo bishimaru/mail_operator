@@ -1371,13 +1371,10 @@ def check_new_mail(driver, wait, name):
         # if True:
         if elapsed_time >= timedelta(minutes=4):
           print("4分以上経過しています。")
-          # s = driver.find_elements(By.CLASS_NAME, value="ds_js_hide_arrow")
-          # s[0].click()
           new_mail[0].click()
           wait.until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
           time.sleep(2)
           catch_warning_screen(driver)
-          print(11111111)
           send_message = driver.find_elements(By.CLASS_NAME, value="message__block--send")    
 
           # send_message = driver.find_elements(By.CLASS_NAME, value="message__block__body__text--female")   
@@ -1448,6 +1445,8 @@ def check_new_mail(driver, wait, name):
             print("---------------------------------------")
             print(fst_message == send_text)
             print("---------------------------------------")
+            print(888)
+            print(return_foot_message)
             print(return_foot_message == send_text)
             print("---------------------------------------")
             print("募集メッセージ" in send_text)
