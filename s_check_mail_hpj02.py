@@ -217,6 +217,7 @@ def check_mail():
 
                 try:
                     smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
+                    smtpobj.set_debuglevel(0)
                     smtpobj.starttls()
                     smtpobj.login(mailaddress, password)
                     msg = MIMEText(text)

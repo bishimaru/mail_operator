@@ -256,6 +256,7 @@ def check_mail():
             # address_to = 'misuzu414510@gmail.com'
             try:
                 smtpobj = smtplib.SMTP('smtp.gmail.com', 587)
+                smtpobj.set_debuglevel(0)
                 smtpobj.starttls()
                 smtpobj.login(mailaddress, password)
                 msg = MIMEText(text)
