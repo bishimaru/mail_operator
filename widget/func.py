@@ -23,9 +23,20 @@ from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.firefox.options import Options
 import setting
+import shutil
 
+
+def clear_webdriver_cache():
+    cache_dir = os.path.expanduser("~/.wdm/drivers")
+    if os.path.exists(cache_dir):
+        try:
+            shutil.rmtree(cache_dir)
+            
+        except Exception as e:
+            print(f"Error clearing webdriver cache: {e}")
 
 def get_driver():
+    clear_webdriver_cache()
     options = G_options()
     options.add_argument('--headless')
     options.add_argument("--incognito")
