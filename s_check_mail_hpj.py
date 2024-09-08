@@ -17,7 +17,7 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 import sqlite3
 import time 
-from datetime import datetime, timedelta, time as dt_time  
+from datetime import datetime, timedelta, time as dt_time, date
 import socket
 order_list = [
    ["アスカ", "asuka414510@gmail.com"],
@@ -65,7 +65,7 @@ def wait_if_near_midnight():
     if current_time >= dt_time(23, 55):
         print("23:55を過ぎたので、0:05まで待機します。")
         # 0:05までの残り時間を計算
-        target_time = datetime.combine(datetime.date.today(), dt_time(0, 5))
+        target_time = datetime.combine(date.today(), dt_time(0, 5))
         if current_time.hour == 23:
             target_time += timedelta(days=1)  # 翌日の0:05を設定
         time_to_wait = (target_time - datetime.datetime.now()).total_seconds()
