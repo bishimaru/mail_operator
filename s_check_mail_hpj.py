@@ -98,6 +98,7 @@ def check_mail():
         
         }
     send_flug = True
+    driver, wait = func.get_driver(1)
     while True:
         start_time = time.time() 
         current_datetime = datetime.utcfromtimestamp(int(start_time))
@@ -119,8 +120,9 @@ def check_mail():
 
             #     driver.quit()
             # wait_if_near_midnight()
+
             # pcmax
-            driver, wait = func.get_driver(1)
+            
             try:
                 pcmax_new, return_foot_cnt = pcmax.check_new_mail(driver, wait, order_info[0])
                 
@@ -139,7 +141,6 @@ def check_mail():
                 print(f"<<<<<<<<<<メールチェックエラー：pcmax{order_info[0]}>>>>>>>>>>>")
                 print(traceback.format_exc())
                 func.send_error(f"メールチェックエラー：pcmax{order_info[0]}", traceback.format_exc())
-
                 driver.quit()
             wait_if_near_midnight()
             # jmail
@@ -265,7 +266,10 @@ def check_mail():
   except (smtplib.SMTPException, socket.gaierror) as e:
     print(f"メール送信中にエラーが発生しました: {e}")
     print("5分間待機して再試行します...")
+    driver.quit()
     time.sleep(300)  # 300秒（5分）間待機
+
+    driver, wait = func.get_driver(1)
     check_mail()
 
 
