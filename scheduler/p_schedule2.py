@@ -26,7 +26,7 @@ if __name__ == '__main__':
     }
     
     # 朝のジョブ
-    scheduler.add_job(chara_order_fstmail.main, 'cron', hour=8, minute=50, args=[1, chara_name_list, 11, 0],  misfire_grace_time=60*60)
+    scheduler.add_job(chara_order_fstmail.main, 'cron', hour=6, minute=25, args=[1, chara_name_list, 11, 0],  misfire_grace_time=60*60)
     # 昼のジョブ
     scheduler.add_job(chara_order_fstmail.main, 'cron', hour=14, minute=15, args=[1, chara_name_list, 15, 15], misfire_grace_time=60*60)
     # 夜のジョブ
