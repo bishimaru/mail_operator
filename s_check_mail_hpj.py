@@ -25,11 +25,11 @@ order_list = [
    ["いおり", "iori547253@gmail.com"],
    ["えりか", "k.erika414510@gmail.com"],
    ["きりこ", "kiriko414510@gmail.com"],
-   ["くみ", "kumi414510@gmail.com"],
+#    ["くみ", "kumi414510@gmail.com"],
    ["さな", "sana.cnfwijl@gmail.com"],
    ["すい", "sui187586@gmail.com"],
    ["つむぎ", "tumtum.jpwa@gmail.com"],
-   ["なお", "n414510a@gmail.com"],
+#    ["なお", "n414510a@gmail.com"],
    ["ハル", "haruru414510@gmail.com"],
    ["はづき", "k.haru414510@gmail.com"], 
    ["めあり", "meari414510@gmail.com"],
@@ -38,6 +38,8 @@ order_list = [
    ["ゆうな", "y8708336@gmail.com"],
    ["ゆっこ", "yuko414510@gmail.com"], 
    ["ゆかり", "y216154@gmail.com"],
+    ["わかな", "wakana30810@gmail.com"],
+
   
 ]
 # order_list = [
