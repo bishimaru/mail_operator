@@ -58,6 +58,7 @@ def wait_if_near_midnight():
         print("現在時刻は0時に近づいています。処理を一時中断します。")
         #     # ここに実行したい動作を追加
         time.sleep(600)
+        print("処理を再開します。")
     return
 
 
@@ -105,11 +106,9 @@ def check_mail():
             debug = False
             # ハッピーメール
             # try:
-            #     driver, wait = get_driver(debug)
             #     happymail_new = happymail.check_new_mail(driver, wait, order_info[0])
             #     if happymail_new:
             #         new_mail_lists.append(happymail_new)
-            #     driver.quit()
             # except Exception as e:
             #     print(f"<<<<<<<<<<メールチェックエラー：ハッピーメール{order_info[0]}>>>>>>>>>>>")
             #     print(traceback.format_exc())
